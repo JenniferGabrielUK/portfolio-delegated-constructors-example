@@ -1,0 +1,50 @@
+#include <iostream>
+#include <string>
+
+class Player {
+    friend std::ostream& operator<< (std::ostream& os, const Player& p) { std::cout << p.name << " - " << p.health << "(health) - " << p.xp << "(xp)" << std::endl;  return os; };     //friend type has access to private attributes without using public getters
+private:
+    std::string name{};
+    double health{};
+    int xp{};
+public:
+    //----------Constructors Overloaded without Delegation--------------------------------------------------------------
+    //Player() : name{"unnamed"}, health{'1.0'}, xp{'0'} {}                                    //no-arguements constructor
+    //Player(std::string name) : name{ name }, health{ '1.0' }, xp{ '0' } {}                   //single-arguements constructor
+    //Player(std::string name, double health) : name{name}, health{health}, xp{'0'} {}         //two-arguements constructor
+    //Player(std::string name, double health, int xp) : name{name}, health{health}, xp{xp} {}  //three-arguements constructor
+
+    //----------Delegated Overloaded Constructors-----------------------------------------------------------------------
+    Player(std::string name, double health, int xp) : name{ name }, health{ health }, xp{ xp } {} //three-arguements delegated constructor
+    Player(std::string name, double health) : Player {name, health, 0} {}                         //two-arguements delegated constructor
+    Player(std::string name) : Player {name, 0.0, 0} {}                                           //one-arguement delegated constructor
+    Player() : Player{ "unknown", 0.0, 0 } {}                                                     //no-arguements delegated constructor
+
+    ~Player() {}
+    void set_name(std::string n) { name = n; }
+    std::string get_name() { return this->name; }
+    void set_health(double h) { health = h; }
+    double get_health() { return this->health; }
+    void set_xp(int i) { xp = i; }
+    int get_xp() { return this->xp; }
+};
+
+void display_player(const Player& p) {
+    std::cout << p;
+}
+
+int main()
+{
+    Player jenny{};
+    Player elizabeth{ "Elizabeth", 10.8 };
+    Player gabriel{ "Gabriel", 12.6, 7 };
+    std::cout << "What would you like to set Player 1's name as? ";
+    std::string temp_string{};
+    std::cin >> temp_string;
+    jenny.set_name(temp_string);
+    display_player(jenny);
+    display_player(elizabeth);
+    display_player(gabriel);
+
+    return 0;
+}
